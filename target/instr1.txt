@@ -1,0 +1,157 @@
+Follow these steps in order. You are using Windows PowerShell.
+Step 1: Create the project
+Open PowerShell and execute:
+mkdir java-cicd
+cd java-cicd
+
+
+Create the project folders:
+mkdir src\main\java
+
+
+Create the required files:
+New-Item pom.xml -ItemType File
+New-Item src\main\java\App.java -ItemType File
+
+
+Open the project in VS Code:
+code .
+
+
+Step 2: Write Java program
+Open src/main/java/App.java and paste:
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Hello DevOps!");
+    }
+}
+
+
+Save the file.
+Step 3: Create pom.xml
+Open pom.xml and paste:
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>java-cicd</artifactId>
+    <version>1.0</version>
+
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+    </build>
+</project>
+
+
+Save the file.
+Step 4: Test using Maven
+Open the VS Code terminal and execute:
+mvn clean
+mvn compile
+mvn test
+mvn package
+
+
+If successful, Maven creates a JAR file inside the target folder.
+Step 5: Initialize Git
+Run these commands one by one:
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+
+
+Step 6: Create GitHub repository
+1. Open GitHub.
+2. Click New repository.
+3. Enter repository name: java-cicd.
+4. Select Public.
+5. Click Create repository.
+Copy your repository URL.
+Step 7: Connect GitHub and upload project
+Replace YOUR_USERNAME with your GitHub username.
+git remote add origin https://github.com/YOUR_USERNAME/java-cicd.git
+
+
+Upload the project:
+git push -u origin main
+
+
+Your Java project is now on GitHub.
+Step 8: Open Jenkins
+Open your browser:
+http://localhost:8080
+
+
+Log in to Jenkins.
+Step 9: Create a Freestyle project
+1. Click New Item.
+2. Enter project name: Java-CI.
+3. Select Freestyle project.
+4. Click OK.
+Step 10: Configure GitHub
+Under Source Code Management:
+1. Select Git.
+2. Enter your repository URL:
+https://github.com/YOUR_USERNAME/java-cicd.git
+
+
+3. Branch Specifier:
+*/main
+
+
+Step 11: Configure Maven build
+Under Build Steps:
+1. Click Add build step.
+2. Select Invoke top-level Maven targets.
+3. Enter Goals:
+clean compile test package
+
+
+4. Click Save.
+
+Make sure Maven is configured in Jenkins under Manage Jenkins → Tools.
+Step 12: Run Jenkins
+1. Open your Java-CI project.
+2. Click Build Now.
+3. Click the build number.
+4. Open Console Output.
+5. Check whether the build is successful.
+Step 13: Test code changes
+Modify App.java:
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Welcome to Automated CI/CD!");
+    }
+}
+
+
+Push the changes to GitHub:
+git add .
+git commit -m "Updated Java code"
+git push origin main
+
+
+To trigger Jenkins automatically on every push:
+1. In Jenkins job configuration, select GitHub hook trigger for GITScm polling under Build Triggers.
+2. In GitHub, open Settings → Webhooks → Add webhook.
+3. Enter your reachable Jenkins address followed by /github-webhook/.
+4. Select application/json and the push event.
+5. Save.
+GitHub must be able to reach Jenkins; localhost:8080 alone will not work as a public webhook address.
+
+Final result
+Successfully implemented a basic CI/CD pipeline using Jenkins Freestyle project, GitHub and Maven. The pipeline performs source code checkout, compilation, testing and application packaging.
+Important commands – Quick revision
+Command	Purpose
+mkdir java-cicd	Create project folder
+mvn compile	Compile Java program
+mvn test	Execute tests
+mvn package	Package application
+git init	Initialize Git
+git add .	Add project files
+git commit -m "Initial commit"	Save changes
+git branch -M main	Rename branch
+git push -u origin main	Upload to GitHub
+
+Note: The Jenkins Freestyle project uses Git for checkout and Maven for the build. No Jenkinsfile is required for this method.
